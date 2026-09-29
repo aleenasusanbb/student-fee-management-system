@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Fee Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #243b53;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .fee-form {
+            background: white;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #243b53;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1b2d40;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #e9eef3;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Student Fee Management System</h1>
+    <p>Simple web application for managing student fee records</p>
+</header>
+
+<div class="container">
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h2>Total Students</h2>
+            <p id="totalStudents">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Fees Collected</h2>
+            <p id="totalFees">₹0</p>
+        </div>
+
+        <div class="card">
+            <h2>Pending Fees</h2>
+            <p id="pendingFees">₹0</p>
+        </div>
+
+    </div>
+
+    <div class="fee-form">
+
+        <h2>Add Student Fee Record</h2>
+
+        <label>Student Name</label>
+        <input type="text" id="studentName" placeholder="Enter student name">
+
+        <label>Class</label>
+        <input type="text" id="studentClass" placeholder="Enter class">
+
+        <label>Fee Amount</label>
+        <input type="number" id="feeAmount" placeholder="Enter fee amount">
+
+        <label>Payment Status</label>
+        <select id="paymentStatus">
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+        </select>
+
+        <button onclick="addStudent()">Add Fee Record</button>
+
+    </div>
+
+    <h2>Student Fee Records</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Class</th>
+                <th>Fee Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="studentTable">
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+
+let students = [];
+
+function addStudent() {
+
+    const name = document.getElementById("studentName").value;
+    const studentClass = document.getElementById("studentClass").value;
+    const amount = Number(document.getElementById("feeAmount").value);
+    const status = document.getElementById("paymentStatus").value;
+
+    if (name === "" || studentClass === "" || amount <= 0) {
+        alert("Please enter all required details.");
+        return;
+    }
+
+    students.push({
+        name: name,
+        studentClass: studentClass,
+        amount: amount,
+        status: status
+    });
+
+    displayStudents();
+
+    document.getElementById("studentName").value = "";
+    document.getElementById("studentClass").value = "";
+    document.getElementById("feeAmount").value = "";
+}
+
+function displayStudents() {
+
+    const table = document.getElementById("studentTable");
+
+    table.innerHTML = "";
+
+    let totalFees = 0;
+    let pendingFees = 0;
+
+    students.forEach(function(student) {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${student.name}</td>
+            <td>${student.studentClass}</td>
+            <td>₹${student.amount}</td>
+            <td>${student.status}</td>
+        `;
+
+        table.appendChild(row);
+
+        if (student.status === "Paid") {
+            totalFees += student.amount;
+        }
+
+        if (student.status === "Pending") {
+            pendingFees += student.amount;
+        }
+    });
+
+    document.getElementById("totalStudents").textContent = students.length;
+    document.getElementById("totalFees").textContent = "₹" + totalFees;
+    document.getElementById("pendingFees").textContent = "₹" + pendingFees;
+}
+
+</script>
+
+</body>
+</html>
